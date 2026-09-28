@@ -1,6 +1,8 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "routes": [
+    { "src": "/api/admin/upload", "dest": "/api/admin-upload" },
+    { "src": "/api/admin/([^/]+)", "dest": "/api/admin?action=$1" },
     { "handle": "filesystem" },
     { "src": "/.*", "dest": "/index.html" }
   ]

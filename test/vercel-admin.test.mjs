@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import login from '../api/login.js';
-import admin from '../api/admin/[action].js';
+import admin from '../api/admin.js';
 
 const me = (req, res) => admin({ ...req, query: { ...(req.query || {}), action: 'me' } }, res);
 const overview = (req, res) => admin({ ...req, query: { ...(req.query || {}), action: 'overview' } }, res);
