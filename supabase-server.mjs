@@ -83,13 +83,16 @@ export async function supabaseService(path, { method = 'GET', body, headers = {}
   catch { throw new ApiProblem('Supabase returned an invalid checkout response.', 502); }
   if (!response.ok) {
     const code = typeof data?.code === 'string' ? data.code : '';
+    const rpcMatch = String(path).match(/\/rpc\/([^/?#]+)/);
+    const rpcName = rpcMatch ? rpcMatch[1] : 'checkout request';
+    const safeDetail = typeof data?.message === 'string' && !/secret|token|key|authorization/i.test(data.message)
+      ? data.message.slice(0, 220)
+      : '';
     const message = code === 'PGRST202' || code === '42883'
-      ? 'Supabase is missing checkout migration 004_test_checkout.sql. Apply it in the Supabase SQL Editor.'
+      ? `Supabase cannot resolve ${rpcName}. ${safeDetail || 'Reload the PostgREST schema and verify this RPC exists with matching parameter names.'}`
       : code === '42501'
-        ? 'Supabase denied checkout. Confirm the service-role key is configured correctly in Vercel.'
-        : typeof data?.message === 'string' && !/secret|token|key|authorization/i.test(data.message)
-          ? data.message.slice(0, 240)
-          : 'Supabase checkout request failed.';
+        ? `Supabase denied ${rpcName}. Confirm the service-role key is configured correctly in Vercel.`
+        : safeDetail || `Supabase ${rpcName} request failed.`;
     throw new ApiProblem(message, response.status >= 500 ? 502 : 400);
   }
   return data;
