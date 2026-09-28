@@ -1,8 +1,8 @@
-import { ApiProblem, csrfToken, functionHandler, parseBody, sendJson, setSessionCookies, supabase } from '../supabase-server.mjs';
+import { ApiProblem, csrfToken, functionHandler, parseBody, sendJson, setSessionCookies, supabase, requestOriginAllowed } from '../supabase-server.mjs';
 
 export default functionHandler(async (req, res) => {
   if (req.method !== 'POST') throw new ApiProblem('Method not allowed.', 405);
-  if (req.headers.origin !== (process.env.SITE_ORIGIN || 'https://oreva-ashy.vercel.app')) {
+  if (!requestOriginAllowed(req)) {
     throw new ApiProblem('Request origin not allowed.', 403);
   }
   const { email, password } = parseBody(req);

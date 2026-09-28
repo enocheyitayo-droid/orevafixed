@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { ApiProblem, functionHandler, parseBody, sendJson, supabaseService } from '../supabase-server.mjs';
+import { ApiProblem, functionHandler, parseBody, sendJson, supabaseService, requestOriginAllowed } from '../supabase-server.mjs';
 import { initializePaystack, paystackSecret } from '../paystack.mjs';
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -18,7 +18,7 @@ function validate(data) {
 
 export default functionHandler(async (req, res) => {
   if (req.method !== 'POST') throw new ApiProblem('Method not allowed.', 405);
-  if (req.headers.origin !== (process.env.SITE_ORIGIN || 'https://oreva-ashy.vercel.app')) throw new ApiProblem('Request origin not allowed.', 403);
+  if (!requestOriginAllowed(req)) throw new ApiProblem('Request origin not allowed.', 403);
   paystackSecret();
   const data = parseBody(req);
   validate(data);

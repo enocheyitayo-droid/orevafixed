@@ -95,6 +95,21 @@ export async function supabaseService(path, { method = 'GET', body, headers = {}
   return data;
 }
 
+
+export function requestOriginAllowed(req) {
+  const origin = req.headers.origin;
+  if (!origin) return false;
+  const allowed = new Set();
+  const configured = process.env.SITE_ORIGIN;
+  if (configured) {
+    try { allowed.add(new URL(configured).origin); } catch {}
+  }
+  const forwardedHost = (req.headers['x-forwarded-host'] || req.headers.host || '').split(',')[0].trim();
+  const forwardedProto = (req.headers['x-forwarded-proto'] || 'https').split(',')[0].trim();
+  if (forwardedHost) allowed.add(`${forwardedProto}://${forwardedHost}`);
+  return allowed.has(origin);
+}
+
 export function parseBody(req) {
   if (req.body && typeof req.body === 'object' && !Buffer.isBuffer(req.body)) return req.body;
   if (typeof req.body === 'string') {
@@ -141,8 +156,7 @@ function sameToken(a, b) {
 }
 
 export async function requireOwner(req, res, { mutation = false } = {}) {
-  const expectedOrigin = process.env.SITE_ORIGIN || 'https://oreva-ashy.vercel.app';
-  if (mutation && req.headers.origin !== expectedOrigin) throw new ApiProblem('Request origin not allowed.', 403);
+  if (mutation && !requestOriginAllowed(req)) throw new ApiProblem('Request origin not allowed.', 403);
 
   const cookies = parseCookies(req);
   if (mutation && !sameToken(req.headers['x-csrf-token'], cookies.oreva_csrf)) {
