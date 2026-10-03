@@ -1,6 +1,7 @@
 import { createHmac, timingSafeEqual } from 'node:crypto';
 import { ApiProblem, functionHandler, sendJson, supabaseService } from '../../supabase-server.mjs';
 import { paystackSecret, verifyPaystack } from '../../paystack.mjs';
+import { sendPaidOrderEmail } from '../../notifications.mjs';
 
 export const config = { api: { bodyParser: false } };
 
@@ -38,5 +39,7 @@ export default functionHandler(async (req, res) => {
   await supabaseService('/rest/v1/rpc/bagz_confirm_payment', {
     method: 'POST', body: { order_id: orderId, transaction },
   });
+  const baseUrl = process.env.SITE_ORIGIN || `${req.headers['x-forwarded-proto'] || 'https'}://${req.headers['x-forwarded-host'] || req.headers.host}`;
+  await sendPaidOrderEmail(orderId, baseUrl);
   return sendJson(res, 200, { received: true });
 });

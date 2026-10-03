@@ -1,3 +1,4 @@
+import { queueEmail } from './email-queue.mjs';
 import { supabaseService } from './supabase-server.mjs';
 
 const money = cents => new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(Number(cents || 0) / 100);
@@ -17,7 +18,7 @@ function fulfilmentCopy(order) {
   return delivery
     ? {
         title: 'Standard delivery anywhere in Nigeria',
-        eta: '2–5 working days after payment',
+        eta: order.timeframe || 'Contact the shop for your delivery estimate',
         detail: order.address ? `Delivery address: ${order.address}` : order.instructions,
       }
     : {
@@ -27,27 +28,7 @@ function fulfilmentCopy(order) {
       };
 }
 
-async function sendResend({ to, subject, html, text, idempotencyKey }) {
-  const apiKey = process.env.RESEND_API_KEY;
-  const from = process.env.EMAIL_FROM;
-  if (!apiKey || !from) return { sent: false, reason: 'Email service is not configured.' };
-  const response = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-      'Idempotency-Key': idempotencyKey,
-    },
-    body: JSON.stringify({ from, to: [to], subject, html, text }),
-    signal: AbortSignal.timeout(12000),
-  });
-  if (!response.ok) {
-    const body = await response.text().catch(() => '');
-    console.error('Order email failed', response.status, body.slice(0, 500));
-    return { sent: false, reason: `Email provider returned ${response.status}.` };
-  }
-  return { sent: true };
-}
+const sendResend = queueEmail;
 
 export async function sendPaidOrderEmail(orderId, baseUrl) {
   try {

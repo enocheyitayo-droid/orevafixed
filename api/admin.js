@@ -1,3 +1,5 @@
+import { deliverEmail } from '../email-queue.mjs';
+import { supabaseService } from '../supabase-server.mjs';
 import {
   ApiProblem,
   clearSessionCookies,
@@ -160,7 +162,14 @@ async function logout(req, res) {
   sendJson(res, 200, { ok: true });
 }
 
-const handlers = {
+async function emails(req,res) {
+ if (!['GET','POST'].includes(req.method)) throw new ApiProblem('Method not allowed.',405);
+ await requireOwner(req,res,{mutation:req.method==='POST'});
+ if(req.method==='POST') { const {key}=parseBody(req); if(typeof key!=='string'||key.length>200) throw new ApiProblem('Invalid email job.'); return sendJson(res,200,await deliverEmail(key)); }
+ const jobs=await supabaseService('/rest/v1/oreva_email_jobs?select=key,status,attempts,error,provider_id,created_at,first_attempt&order=created_at.desc&limit=100');
+ sendJson(res,200,{jobs});
+}
+const handlers = { emails,
   me,
   overview,
   product,

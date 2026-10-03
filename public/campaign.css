@@ -15,8 +15,7 @@ body.home .topbar,body.home>.mode,.home #app>.mode{display:none}.home #main{max-
 .inspiration-track figure{flex:0 0 clamp(220px,25vw,340px);width:clamp(220px,25vw,340px);margin:0;background:#f6f4f0}
 .inspiration-track img{display:block;width:100%;aspect-ratio:4/5;object-fit:contain;background:#fff}
 .inspiration-track figcaption{padding:14px 10px;font-size:9px;letter-spacing:2px}
-.inspiration-track a{display:block;color:inherit;text-decoration:none}
-.inspiration-track a:focus-visible{outline:2px solid #8f4a32;outline-offset:3px}
+.inspiration-gallery:hover .inspiration-track{animation-play-state:paused}
 @keyframes inspiration-drift{to{transform:translateX(-50%)}}
 @media(max-width:600px){.inspiration-gallery{padding:28px 0}.inspiration-gallery>.section-head{padding:0 5.5%}.inspiration-track{animation-duration:32s}.inspiration-track-group{gap:12px;padding-right:12px}.inspiration-track figure{flex-basis:72vw;width:72vw}}
 @media(prefers-reduced-motion:reduce){.inspiration-track{animation:none;transform:none}.inspiration-track-group[aria-hidden=true]{display:none}}
@@ -25,3 +24,13 @@ body.home .topbar,body.home>.mode,.home #app>.mode{display:none}.home #main{max-
 
 @media(prefers-reduced-motion:reduce){.inspiration-track,.inspiration-track-group{animation:none!important;transform:none!important}.inspiration-track{overflow-x:auto}.inspiration-track-group[aria-hidden=true]{display:none}}
 .inspiration-track:hover{animation-play-state:paused}
+@media(max-width:600px){
+ .home .header .brand-logo img{width:166px;max-width:42vw;height:68px;object-fit:contain}
+ .home .campaign-hero{min-height:700px;min-height:calc(100svh - 150px)}
+ .home .campaign-image{object-position:center bottom;opacity:1;width:100%;height:70%;top:auto;bottom:0;object-fit:cover}
+ .home .campaign-hero:before{background:linear-gradient(180deg,#080807 0%,#080807fa 22%,#080807a0 43%,#08080720 65%,#08080745 100%)}
+ .home .campaign-hero .couture-copy{padding:42px 7% 310px}
+ .home .campaign-hero .couture-copy h1{font-size:clamp(38px,10vw,48px);max-width:100%;margin-bottom:18px}
+ .home .campaign-hero .couture-copy p:not(.eyebrow){font-size:13px;line-height:1.6;margin-bottom:22px}
+ .home .campaign-hero .hero-bottom{font-size:8px;line-height:1.6;bottom:12px}
+}

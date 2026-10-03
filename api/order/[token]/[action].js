@@ -1,5 +1,6 @@
 import { ApiProblem, functionHandler, parseBody, sendJson, supabaseService } from '../../../supabase-server.mjs';
 import { initializePaystack, verifyPaystack } from '../../../paystack.mjs';
+import { sendPaidOrderEmail } from '../../../notifications.mjs';
 
 function params(req) {
   const parts = new URL(req.url, 'https://vercel.invalid').pathname.split('/').filter(Boolean);
@@ -29,6 +30,8 @@ export default functionHandler(async (req, res) => {
     const transaction = await verifyPaystack(identity.reference);
     if (String(transaction.metadata?.order_id) !== String(identity.id)) throw new ApiProblem('Payment verification did not match this order.', 409);
     await supabaseService('/rest/v1/rpc/bagz_confirm_payment', { method: 'POST', body: { order_id: identity.id, transaction } });
+    const baseUrl = process.env.SITE_ORIGIN || `${req.headers['x-forwarded-proto'] || 'https'}://${req.headers['x-forwarded-host'] || req.headers.host}`;
+    await sendPaidOrderEmail(identity.id, baseUrl);
     const order = await supabaseService('/rest/v1/rpc/bagz_public_order', { method: 'POST', body: { order_token: token } });
     return sendJson(res, 200, order);
   }

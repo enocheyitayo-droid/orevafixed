@@ -2,35 +2,3 @@
 @media(max-width:900px){.report-metrics{grid-template-columns:1fr 1fr}.owner-columns{gap:24px}.work-queue{gap:10px}.queue-item{padding:17px}.footer{flex-wrap:wrap}.footer-tools{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){body:has(#mobile-shop-nav){padding-bottom:64px}#mobile-shop-nav{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:6;justify-content:space-around;background:#000;color:white;border-top:1px solid #444;padding:4px 8px calc(4px + env(safe-area-inset-bottom))}#mobile-shop-nav a{display:grid;place-items:center;min-height:48px;flex:1;font-size:11px;letter-spacing:.3px}#mobile-shop-nav a:focus-visible{outline-color:white}#toast{bottom:80px}.catalogue-options{gap:10px;padding:13px}.catalogue-options label{min-width:calc(50% - 10px)}.catalogue-options .check{flex-basis:100%;font-size:12px}.save-piece{width:32px;min-height:32px;left:6px;top:31px;font-size:21px}.help-grid,.owner-columns{grid-template-columns:1fr;gap:20px}.help-grid h2{font-size:27px}.help-copy h2{font-size:27px}.work-queue{grid-template-columns:1fr 1fr;gap:10px;margin:20px 0}.queue-item{padding:17px}.queue-item strong{font-size:30px}.queue-item span{font-size:11px}.setup-list{padding:20px}.admin-tabs{flex-wrap:nowrap;overflow-x:auto}.compact-row{gap:10px;flex-wrap:wrap}.compact-row>div{max-width:100%}.customer-row{grid-template-columns:35px 1fr;gap:12px}.customer-row>div:last-child{grid-column:2}.customer-monogram{height:34px;width:34px;font-size:18px}.order-filters{gap:10px}.order-filters label{min-width:calc(50% - 10px)}.order-filters>a{width:100%}.report-filter{gap:10px}.report-filter label{width:calc(50% - 5px)}.report-filter button{width:100%}.report-metrics{gap:10px}.report-metrics>div{padding:16px}.report-metrics strong{font-size:21px}.report-metrics span{font-size:11px}.chart-row{grid-template-columns:75px 1fr 85px;gap:8px}.chart-row strong{font-size:10px}.checkout-steps{font-size:10px;gap:9px}.product-actions{font-size:11px;gap:10px}.product-actions a{width:100%;margin-left:0}.footer-tools{margin-top:25px!important;font-size:12px}.order-timeline{margin-top:30px}.gallery-thumbs button{min-width:60px;width:60px;height:68px}}
 @media print{#mobile-shop-nav,.save-piece,.footer-tools,.checkout-steps,#copy-order{display:none!important}}
-
-
-/* 2026 mobile checkout hardening */
-@media (max-width: 720px){
-  body{padding-bottom:76px;overflow-x:hidden}
-  .wrap{width:100%;padding-left:20px;padding-right:20px}
-  .topbar{font-size:9px;letter-spacing:1.4px;padding:8px 10px;white-space:nowrap;overflow:hidden}
-  .header{height:82px;gap:12px}
-  .header .brand{max-width:48%;font-size:30px;line-height:1}
-  .brand-logo{width:145px;max-width:48%}
-  .brand-logo img{max-width:100%;height:auto}
-  .nav{gap:10px;margin-left:auto}
-  .nav .desktop{display:none}
-  .nav a{font-size:12px}
-  .cart-link{padding:9px 12px}
-  .page{padding-top:30px;padding-bottom:34px}
-  .page-title{font-size:clamp(38px,12vw,56px);letter-spacing:-1.5px}
-  .two-col{display:block!important}
-  .two-col>.form,.two-col>.summary{width:100%;max-width:none}
-  .two-col>.summary{margin-top:26px;position:static!important}
-  .form-row{grid-template-columns:1fr!important}
-  .form input,.form select,.form textarea{width:100%;min-width:0;font-size:16px}
-  .form button[type=submit]{width:100%;min-height:52px}
-  .summary{padding:22px 18px}
-  .summary-row{gap:16px}
-  .checkout-steps{display:grid!important;grid-template-columns:repeat(3,1fr);gap:6px;padding:0;margin:0 0 24px;list-style:none}
-  .checkout-steps li{font-size:10px;line-height:1.25;padding:10px 6px;text-align:center;border:1px solid var(--line)}
-  #mobile-shop-nav{position:fixed;z-index:1000;left:0;right:0;bottom:0;display:grid!important;grid-template-columns:repeat(5,1fr);background:#050505;color:#fff;border-top:1px solid #333;padding:10px 6px max(10px,env(safe-area-inset-bottom));box-shadow:0 -8px 24px #00000018}
-  #mobile-shop-nav a{display:flex;align-items:center;justify-content:center;min-height:38px;font-size:12px;text-align:center}
-  .footer{padding-bottom:30px}
-}
-@media (min-width:721px){#mobile-shop-nav{display:none!important}}
