@@ -24,13 +24,3 @@ body.home .topbar,body.home>.mode,.home #app>.mode{display:none}.home #main{max-
 
 @media(prefers-reduced-motion:reduce){.inspiration-track,.inspiration-track-group{animation:none!important;transform:none!important}.inspiration-track{overflow-x:auto}.inspiration-track-group[aria-hidden=true]{display:none}}
 .inspiration-track:hover{animation-play-state:paused}
-@media(max-width:600px){
- .home .header .brand-logo img{width:166px;max-width:42vw;height:68px;object-fit:contain}
- .home .campaign-hero{min-height:700px;min-height:calc(100svh - 150px)}
- .home .campaign-image{object-position:center bottom;opacity:1;width:100%;height:70%;top:auto;bottom:0;object-fit:cover}
- .home .campaign-hero:before{background:linear-gradient(180deg,#080807 0%,#080807fa 22%,#080807a0 43%,#08080720 65%,#08080745 100%)}
- .home .campaign-hero .couture-copy{padding:42px 7% 310px}
- .home .campaign-hero .couture-copy h1{font-size:clamp(38px,10vw,48px);max-width:100%;margin-bottom:18px}
- .home .campaign-hero .couture-copy p:not(.eyebrow){font-size:13px;line-height:1.6;margin-bottom:22px}
- .home .campaign-hero .hero-bottom{font-size:8px;line-height:1.6;bottom:12px}
-}
