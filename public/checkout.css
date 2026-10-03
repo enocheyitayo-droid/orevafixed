@@ -1,0 +1,23 @@
+
+/* Checkout-only styling: preserve storefront branding and typography. */
+.purchase-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.checkout-page{max-width:1100px;margin:auto;padding:40px 0 65px}
+.checkout-page>.page-title{font-size:clamp(34px,4vw,48px);margin:16px 0 24px}
+.checkout-page .two-col{grid-template-columns:minmax(0,1.25fr) minmax(280px,1fr);gap:56px;align-items:start}
+.checkout-page .form{gap:18px}.checkout-page h3{font-family:Arial,Helvetica,sans-serif;font-size:16px;font-weight:600;letter-spacing:0;margin:18px 0 0}
+.checkout-page .form label{font-size:13px;font-weight:500;line-height:1.5}
+.checkout-page .form input:not([type=radio]),.checkout-page .form select,.checkout-page .form textarea{font-size:16px;border:1px solid #d9d9d9;border-radius:6px;min-height:46px;background:#fff;padding:11px 12px;box-sizing:border-box;width:100%}
+.checkout-page input:focus-visible,.checkout-page select:focus-visible{outline:2px solid #333;outline-offset:2px}
+.checkout-page .delivery-choice{display:grid;gap:10px}
+.checkout-page .delivery-option{display:grid;grid-template-columns:20px minmax(0,1fr) auto;gap:12px;align-items:center;border:1px solid #d9d9d9;border-radius:7px;padding:16px;cursor:pointer}
+.checkout-page .delivery-option:has(input:checked){border-color:#171715;background:#faf9f6;box-shadow:0 0 0 1px #171715}
+.checkout-page .delivery-option input[type=radio]{width:18px;height:18px;min-height:18px;margin:0;padding:0;accent-color:#171715}
+.checkout-page .delivery-option span{display:grid;gap:4px}.checkout-page .delivery-option small{font-weight:400;color:#666}.checkout-page .delivery-option b{font-size:13px;white-space:nowrap}
+.checkout-page .delivery-address{display:grid;gap:16px}.checkout-page [hidden]{display:none!important}
+.checkout-page .summary{position:sticky;top:24px;background:#f8f7f4;padding:28px;border:1px solid #eceae5;border-radius:10px}
+.checkout-page .summary h2{font:600 19px Arial,Helvetica,sans-serif;margin-bottom:24px}
+.checkout-page .summary-row{font-size:14px;gap:20px;line-height:1.5}.checkout-page .summary-row>span:last-child{white-space:nowrap}
+.checkout-page .summary-row.total{font-size:18px;padding-top:20px;margin-top:14px;border-top:1px solid #d8d5ce}
+.checkout-page .notice{font-size:13px;line-height:1.6;border-radius:6px}.checkout-page .muted,.checkout-page #checkout-eta{font-size:13px;line-height:1.6}
+.checkout-page button[type=submit]{width:100%;min-height:50px;border-radius:6px;font-size:14px}
+@media(max-width:700px){.checkout-page{padding-top:24px}.checkout-page .two-col{grid-template-columns:1fr;gap:26px}.checkout-page .summary{position:static;grid-row:1;padding:22px}.checkout-page .form-row{grid-template-columns:1fr}.checkout-page .delivery-option{padding:14px;gap:10px}.purchase-actions{grid-template-columns:1fr}}
