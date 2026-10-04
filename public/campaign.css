@@ -24,3 +24,7 @@ body.home .topbar,body.home>.mode,.home #app>.mode{display:none}.home #main{max-
 
 @media(prefers-reduced-motion:reduce){.inspiration-track,.inspiration-track-group{animation:none!important;transform:none!important}.inspiration-track{overflow-x:auto}.inspiration-track-group[aria-hidden=true]{display:none}}
 .inspiration-track:hover{animation-play-state:paused}
+/* Keep animated displays keyboard-accessible and usable without animation. */
+.inspiration-gallery:focus-within .inspiration-track{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.inspiration-gallery{overflow-x:auto}.inspiration-track{width:max-content}}
+@media(max-width:600px){.order-card{overflow-wrap:anywhere}.order-card .button,.order-card button{margin:5px 0;max-width:100%}.summary-row{gap:12px}.admin-tabs{overflow-x:auto}}

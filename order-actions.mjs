@@ -1,6 +1,6 @@
-import { ApiProblem, functionHandler, parseBody, sendJson, supabaseService } from '../../../supabase-server.mjs';
-import { initializePaystack, verifyPaystack } from '../../../paystack.mjs';
-import { sendPaidOrderEmail } from '../../../notifications.mjs';
+import { ApiProblem, functionHandler, parseBody, sendJson, supabaseService } from './supabase-server.mjs';
+import { initializePaystack, verifyPaystack } from './paystack.mjs';
+import { sendPaidOrderEmail } from './notifications.mjs';
 
 function params(req) {
   const parts = new URL(req.url, 'https://vercel.invalid').pathname.split('/').filter(Boolean);

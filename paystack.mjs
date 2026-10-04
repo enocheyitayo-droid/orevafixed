@@ -28,7 +28,7 @@ export async function paystack(path, body) {
   try { result = await response.json(); }
   catch { throw new ApiProblem('Paystack returned an invalid response.', 502); }
   if (!response.ok || result.status !== true) {
-    throw new ApiProblem('Paystack test checkout could not be completed. Please retry or contact the store.', 502);
+    throw new ApiProblem('Paystack checkout could not be completed. Please retry or contact the store.', 502);
   }
   return result.data;
 }
@@ -44,7 +44,7 @@ export async function initializePaystack(order) {
     metadata: { order_id: order.id, order_token: order.token },
   });
   if (data.reference !== order.reference) {
-    throw new ApiProblem('Paystack returned an unexpected test checkout.', 502);
+    throw new ApiProblem('Paystack returned an unexpected checkout.', 502);
   }
   let checkout;
   try { checkout = new URL(data.authorization_url); }

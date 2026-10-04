@@ -1,4 +1,4 @@
-import { ApiProblem, functionHandler, sendJson, supabaseService } from '../../supabase-server.mjs';
+import { ApiProblem, functionHandler, sendJson, supabaseService } from './supabase-server.mjs';
 
 export default functionHandler(async (req, res) => {
   const token = req.query?.token || new URL(req.url, 'https://vercel.invalid').pathname.split('/').filter(Boolean).at(-1);
