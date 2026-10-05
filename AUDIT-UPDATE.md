@@ -22,3 +22,10 @@ Still required:
 - Browser mobile visual review and deployed admin/SQL permissions remain unverified. The API tests use provider mocks.
 
 Deployment must REMOVE api/order/[token].js and api/order/[token]/[action].js. Prefer the Git branch change over extracting over an old checkout. The clean source ZIP has no secrets, database, node_modules, duplicate project folders or .git.
+
+## 5 October follow-up
+- GitHub branch fix/store-audit is now pushed successfully.
+- Added cloud Site content tab and owner-authenticated, CSRF-protected content API. Shipping, returns, privacy and support email can be edited without redeploying after migration 008_site_content.sql is applied.
+- Migration 008 is additive and rerunnable; existing orders and email tables are untouched. It has not been run against the hosted database yet.
+- The public catalogue reads published content but remains available before migration 008 is applied.
+- Site content endpoint regression test covers unauthorized writes, invalid email and exact policy text preservation. No policies or product prices were invented.

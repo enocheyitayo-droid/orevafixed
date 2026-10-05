@@ -1,3 +1,4 @@
+import {siteContent} from '../site-content.mjs';
 import { ownerOrders } from '../owner-orders.mjs';
 import { deliverEmail } from '../email-queue.mjs';
 import { supabaseService } from '../supabase-server.mjs';
@@ -171,7 +172,7 @@ async function emails(req,res) {
  const configuration=!process.env.RESEND_API_KEY||!process.env.EMAIL_FROM?'Email sending is not configured. Add RESEND_API_KEY and a verified EMAIL_FROM sender in Vercel.':process.env.EMAIL_TEST_RECIPIENT?'Email is restricted to the configured test recipient. Verify a sending domain before enabling email for all customers.':'Email credentials are configured. Check provider logs to confirm delivery.';
  sendJson(res,200,{jobs,configuration});
 }
-const handlers = { emails, orders: ownerOrders,
+const handlers = { content: siteContent, emails, orders: ownerOrders,
   me,
   overview,
   product,

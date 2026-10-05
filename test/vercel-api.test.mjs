@@ -26,7 +26,7 @@ test('Vercel catalogue endpoint reads the public Supabase RPC', async () => {
   globalThis.fetch = async (url, options) => {
     const current = { url: String(url), options };
     requests.push(current);
-    const data = current.url.endsWith('/bagz_storefront_gallery')
+    const data = current.url.endsWith('/oreva_read_content') ? {about:'Our store'} : current.url.endsWith('/bagz_storefront_gallery')
       ? ['gallery-image.webp']
       : { settings: { brand: 'Orẽva' }, products: [], mode: 'disabled' };
     return new Response(JSON.stringify(data), { status: 200 });
@@ -38,12 +38,12 @@ test('Vercel catalogue endpoint reads the public Supabase RPC', async () => {
     assert.deepEqual(requests.map(request => request.url), [
       'https://project.supabase.co/rest/v1/rpc/bagz_catalogue',
       'https://project.supabase.co/rest/v1/rpc/bagz_storefront_gallery',
+      'https://project.supabase.co/rest/v1/rpc/oreva_read_content',
     ]);
     assert.equal(requests[0].options.headers.apikey, 'public-test-key');
     assert.deepEqual(JSON.parse(res.body), {
       settings: { brand: 'Orẽva', logo: '', bagDisplay: '', shoeDisplay: '', displayGallery: ['https://project.supabase.co/storage/v1/object/public/bagz-store-media/gallery-image.webp'] },
-      products: [],
-      mode: 'disabled',
+      products: [], content: {about:'Our store'}, mode: 'disabled',
     });
   } finally {
     globalThis.fetch = previous.fetch;

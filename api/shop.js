@@ -86,6 +86,11 @@ export default async function handler(req, res) {
         ? (product.variants || []).map(variant => ({ ...variant, size: '' }))
         : product.variants,
     }));
+    // Optional content migration must not prevent catalogue browsing.
+    try {
+      const contentResponse=await fetch(new URL('/rest/v1/rpc/oreva_read_content',origin),{method:'POST',headers:{apikey:anonKey,Authorization:`Bearer ${anonKey}`,'Content-Type':'application/json'},body:'{}',signal:AbortSignal.timeout(4000)});
+      if(contentResponse.ok){const content=await contentResponse.json();if(content && typeof content==='object' && !Array.isArray(content))data.content=content;}
+    } catch {}
     return json(res, 200, data);
   } catch {
     return json(res, 502, { error: 'Could not reach the store database.' });
