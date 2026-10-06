@@ -15,7 +15,7 @@ Keep these production environment variables:
 - SUPABASE_ANON_KEY
 - SUPABASE_SERVICE_ROLE_KEY
 - PAYSTACK_SECRET_KEY
-- SITE_ORIGIN=https://oreva-ashy.vercel.app
+- SITE_ORIGIN=https://shopwithoreva.ng
 
 Admin URLs such as `/api/admin/me` are rewritten to one admin function. Image uploads use one separate function because they require raw request bodies. Total functions: 10 (under the Hobby limit of 12 shown by the project).
 

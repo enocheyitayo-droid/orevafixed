@@ -34,7 +34,7 @@ export async function paystack(path, body) {
 }
 
 export async function initializePaystack(order) {
-  const origin = process.env.SITE_ORIGIN || 'https://oreva-ashy.vercel.app';
+  const origin = process.env.SITE_ORIGIN || 'https://shopwithoreva.ng';
   const data = await paystack('/transaction/initialize', {
     email: order.email,
     amount: order.total,

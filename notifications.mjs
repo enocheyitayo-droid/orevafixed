@@ -50,9 +50,9 @@ export async function sendPaidOrderEmail(orderId, baseUrl) {
     const ownerEmail = process.env.OWNER_NOTIFICATION_EMAIL?.trim();
     if (ownerEmail) messages.push({
       to: ownerEmail,
-      subject: `New paid order ? ${order.number}`,
-      html: `<h1>New paid Or?va order</h1><p><strong>${esc(order.number)}</strong> ? payment verified.</p><p>Customer: ${esc(order.name)}<br>Email: ${esc(order.email)}<br>Phone: ${esc(order.phone)}</p><table style="width:100%">${itemRows}</table><p>Delivery / pickup: ${esc(money(order.delivery))}<br><strong>Total paid: ${esc(money(order.total))}</strong></p><p>${esc(fulfil.title)}<br>${esc(fulfil.detail)}<br>${esc(fulfil.eta)}</p><p><a href="${esc(baseUrl.replace(/\/$/, '') + '/admin')}">Open order administration</a></p>`,
-      text: `New paid order: ${order.number}\nCustomer: ${order.name}\nEmail: ${order.email}\nPhone: ${order.phone}\n${order.items.map(item => `${item.quantity} x ${item.name} (${[item.colour,item.size].filter(Boolean).join(', ')}) ? ${money(item.price * item.quantity)}`).join('\n')}\nTotal paid: ${money(order.total)}\n${fulfil.title}\n${fulfil.detail}\n${fulfil.eta}`,
+      subject: `New paid order · ${order.number}`,
+      html: `<h1>New paid Orẽva order</h1><p><strong>${esc(order.number)}</strong> · payment verified.</p><p>Customer: ${esc(order.name)}<br>Email: ${esc(order.email)}<br>Phone: ${esc(order.phone)}</p><table style="width:100%">${itemRows}</table><p>Delivery / pickup: ${esc(money(order.delivery))}<br><strong>Total paid: ${esc(money(order.total))}</strong></p><p>${esc(fulfil.title)}<br>${esc(fulfil.detail)}<br>${esc(fulfil.eta)}</p><p><a href="${esc(baseUrl.replace(/\/$/, '') + '/admin')}">Open order administration</a></p>`,
+      text: `New paid order: ${order.number}\nCustomer: ${order.name}\nEmail: ${order.email}\nPhone: ${order.phone}\n${order.items.map(item => `${item.quantity} x ${item.name} (${[item.colour,item.size].filter(Boolean).join(', ')}) · ${money(item.price * item.quantity)}`).join('\n')}\nTotal paid: ${money(order.total)}\n${fulfil.title}\n${fulfil.detail}\n${fulfil.eta}`,
       idempotencyKey: `oreva-owner-paid-${order.id}`,
     });
     // A customer delivery failure must not prevent the owner notification.
