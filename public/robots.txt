@@ -1,5 +1,6 @@
 User-agent: *
 Disallow: /api/
+Allow: /api/shop$
 Disallow: /admin
 Disallow: /order/
 Disallow: /checkout
