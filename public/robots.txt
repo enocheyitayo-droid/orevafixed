@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /api/
+Disallow: /admin
+Disallow: /order/
+Disallow: /checkout
+Disallow: /dev-pay/
+
+Sitemap: https://www.shopwithoreva.ng/sitemap.xml

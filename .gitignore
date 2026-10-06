@@ -7,3 +7,6 @@ data/*
 .vercel/
 *.zip
 *.sqlite*
+
+/oreva-merged/
+/oreva_postpayment/
