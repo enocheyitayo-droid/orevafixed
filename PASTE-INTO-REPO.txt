@@ -1,0 +1,16 @@
+OREVA EMAIL UPGRADE
+
+Paste these files into the ROOT of your existing `orevafixed` repo and choose Replace when Windows asks.
+
+Changes:
+- Branded customer order-confirmation email using the supplied Oreva logo.
+- Purchased product image shown when a product photo exists in Supabase storefront media.
+- Owner new-paid-order alert includes product image, customer details, fulfilment, total and Paystack reference.
+- Owner alert address uses OWNER_NOTIFICATION_EMAIL first, otherwise the Owner notification email saved in Oreva Admin > Settings.
+
+After pasting:
+  git add .
+  git commit -m "Upgrade Oreva receipt and owner order emails"
+  git push origin main
+
+If you do not receive owner order alerts, open Oreva Admin > Settings and fill in Owner notification email, then save.
