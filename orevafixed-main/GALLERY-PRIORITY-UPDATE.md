@@ -1,0 +1,1 @@
+Gallery priority update: thumbnail clicks always show and keep the exact clicked image. Colour recognition is optional and only syncs the selector silently; it never overrides a user-selected gallery image. Colour selection can still change to a mapped/detected/fallback photo.
