@@ -1,5 +1,5 @@
 import {catalogueWarnings} from '/catalogue-checks.js?v=frontend-20261007';
-import {filterProducts,isSaved,enhanceStore,enhanceOrder,enhanceAdmin,showWishlist,showHelp,showTrack} from '/enhancements.js?v=gallery-sync-20261007';
+import {filterProducts,isSaved,enhanceStore,enhanceOrder,enhanceAdmin,showWishlist,showHelp,showTrack} from '/enhancements.js?v=gallery-direct-20261007';
 window.__orevaBooted=true;
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

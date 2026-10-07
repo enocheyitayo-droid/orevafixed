@@ -42,15 +42,14 @@ export function enhanceStore(c){const {$,$$,shop,esc,cash,toast}=c;
     if(p.category==='Bags'&&variantSelect&&uniqueChoices.length>1){
       const sourceLabel=variantSelect.closest('label');if(sourceLabel)sourceLabel.classList.add('variant-source');
       const selector=document.createElement('label');selector.className='auto-colour-selector';selector.innerHTML=`<span>Colour</span><select id="display-colour">${uniqueChoices.map((x,i)=>`<option value="${i}">${esc(x.colour)}</option>`).join('')}</select>`;sourceLabel?.before(selector);
-      const displaySelect=selector.querySelector('select');let detected={};
-      const photoFor=choice=>explicitMap[choice.colour]||Object.entries(detected).find(([,c])=>c.toLowerCase()===String(choice.colour).toLowerCase())?.[0]||photos[uniqueChoices.indexOf(choice)+1]||photos[uniqueChoices.indexOf(choice)]||photos[0];
+      const displaySelect=selector.querySelector('select');
+      const photoFor=choice=>explicitMap[choice.colour]||photos[uniqueChoices.indexOf(choice)+1]||photos[uniqueChoices.indexOf(choice)]||photos[0];
       const setChoice=(index,{changePhoto=true,notifyVariant=true}={})=>{const choice=uniqueChoices[Number(index)]||uniqueChoices[0];displaySelect.value=String(uniqueChoices.indexOf(choice));variantSelect.value=choice.variant.id;if(notifyVariant)originalChange?.();selector.querySelector('span').textContent='Colour — '+choice.colour;if(changePhoto)showPhoto(photoFor(choice),choice.colour);return choice;};
-      const syncChoiceOnly=index=>setChoice(index,{changePhoto:false,notifyVariant:false});
-      const colourForPhoto=src=>{const explicit=Object.entries(explicitMap).find(([,photo])=>photo===src)?.[0];if(explicit)return explicit;return Object.entries(detected).find(([photo])=>photo===src)?.[1]||'';};
       displaySelect.onchange=()=>setChoice(displaySelect.value,{changePhoto:true,notifyVariant:true});
-      $$('[data-photo]').forEach(b=>b.onclick=()=>{const src=b.dataset.photo;showPhoto(src,'');const match=colourForPhoto(src);if(match){const i=uniqueChoices.findIndex(x=>String(x.colour).toLowerCase()===String(match).toLowerCase());if(i>=0)syncChoiceOnly(i);}});
+      // Gallery clicks are intentionally independent from colour detection. The exact
+      // thumbnail the shopper taps must always become the main image immediately.
+      $$('[data-photo]').forEach(b=>b.onclick=e=>{e.preventDefault();showPhoto(b.dataset.photo,'');});
       setChoice(0,{changePhoto:true,notifyVariant:true});
-      detectPhotoColours().then(map=>{detected=map;const currentButton=$$('[data-photo]').find(b=>b.getAttribute('aria-pressed')==='true');const src=currentButton?.dataset.photo||'';if(!src)return;const match=colourForPhoto(src);if(match){const i=uniqueChoices.findIndex(x=>String(x.colour).toLowerCase()===String(match).toLowerCase());if(i>=0)syncChoiceOnly(i);}});
     }else{
       $$('[data-photo]').forEach(b=>b.onclick=()=>showPhoto(b.dataset.photo,''));
       if(variantSelect){variantSelect.onchange=()=>{originalChange?.();const variant=p.variants.find(v=>v.id===variantSelect.value);if(variant)showPhoto(p.colourPhotos?.[variant.colour]||photos[0],variant.colour);};variantSelect.onchange();}
