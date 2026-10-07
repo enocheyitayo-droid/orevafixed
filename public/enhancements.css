@@ -25,3 +25,6 @@
   .purchase-actions{display:grid;grid-template-columns:1fr;gap:10px}
   .purchase-actions .full{width:100%}
 }
+
+/* Automatic product colour selector */
+.variant-source{display:none!important}.auto-colour-selector{display:block;margin-bottom:14px}.auto-colour-selector>span{display:block;font-size:12px;font-weight:600;margin-bottom:7px}.auto-colour-selector select{width:100%;min-height:48px;background:#fff;border:1px solid var(--line);padding:10px 12px}

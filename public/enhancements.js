@@ -21,18 +21,37 @@ export function enhanceStore(c){const {$,$$,shop,esc,cash,toast}=c;
   if(p&&$('.detail')&&!$('#product-extras')){
     const photos=p.photos?.length?p.photos:[p.photo].filter(Boolean);$('.detail>div:first-child').insertAdjacentHTML('beforeend',`<div class="gallery-thumbs">${photos.map((src,i)=>`<button data-photo="${esc(src)}" aria-label="View product photo ${i+1}" aria-pressed="${i===0}"><img src="${esc(src)}" alt="${esc(p.name)} view ${i+1}"></button>`).join('')}</div>`);
     const showPhoto=(src,label)=>{const image=$('.detail-photo');if(!image)return;image.src=src;image.alt=p.name+(label?' - '+label:'');$$('[data-photo]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.photo===src)));};
-    $$('[data-photo]').forEach(b=>b.onclick=()=>showPhoto(b.dataset.photo,''));
     const variantSelect=$('#variant');
-    if(photos.length>1){
-      const all=document.createElement('option');all.value='';all.textContent='View all colours';variantSelect.prepend(all);
-      const originalChange=variantSelect.onchange;
-      const updateColour=()=>{
-        const variant=p.variants.find(v=>v.id===variantSelect.value);
-        if(!variant){showPhoto(photos[0],'All colours');$('#add-button').disabled=true;$('#buy-button').disabled=true;$('#stock').textContent='Choose a colour and size to order.';return;}
-        originalChange?.();showPhoto(p.colourPhotos?.[variant.colour]||photos[0],variant.colour);
-      };
-      variantSelect.onchange=updateColour;variantSelect.value='';updateColour();
-      $('#add-form').addEventListener('submit',event=>{if(!variantSelect.value){event.preventDefault();event.stopImmediatePropagation();variantSelect.focus();}},true);
+    const originalChange=variantSelect?.onchange;
+    const colourNames=['black','white','blue','navy','pink','rose','yellow','brown','tan','nude','beige','cream','burgundy','wine','red','green','olive','grey','gray','purple','orange'];
+    const title=s=>s.charAt(0).toUpperCase()+s.slice(1).toLowerCase();
+    const splitColours=value=>{const text=String(value||'').toLowerCase().replace(/[,_\/|+-]+/g,' ');const found=[];for(const name of colourNames){if(new RegExp('(?:^|\\s)'+name+'(?:$|\\s)').test(' '+text+' ')&&!found.includes(name))found.push(name);}return found.map(x=>title(x==='gray'?'grey':x));};
+    const explicitMap=Object.fromEntries(Object.entries(p.colourPhotos||{}).flatMap(([name,src])=>splitColours(name).map(c=>[c,src])));
+    const choices=[];
+    for(const v of p.variants){const parsed=splitColours(v.colour);if(parsed.length>1){for(const colour of parsed)choices.push({colour,variant:v});}else choices.push({colour:parsed[0]||v.colour,variant:v});}
+    const uniqueChoices=[];for(const choice of choices){if(!uniqueChoices.some(x=>x.colour.toLowerCase()===String(choice.colour).toLowerCase()))uniqueChoices.push(choice);}
+    async function detectPhotoColours(){
+      if(!photos.length||uniqueChoices.length<2)return {};
+      const palette={black:[35,35,35],white:[238,238,232],blue:[72,105,160],navy:[35,55,92],pink:[205,125,150],rose:[185,105,120],yellow:[210,180,65],brown:[112,75,48],tan:[166,126,88],nude:[201,170,140],beige:[190,172,145],cream:[226,214,185],burgundy:[105,34,45],wine:[100,36,52],red:[170,55,48],green:[70,115,75],olive:[104,110,65],grey:[110,110,108],purple:[115,75,135],orange:[190,105,45]};
+      const available=uniqueChoices.map(x=>String(x.colour).toLowerCase()).map(x=>x==='gray'?'grey':x).filter(x=>palette[x]);
+      if(!available.length)return {};
+      const result={};
+      await Promise.all(photos.map((src,index)=>new Promise(resolve=>{const img=new Image();img.crossOrigin='anonymous';img.onload=()=>{try{const canvas=document.createElement('canvas'),size=90;canvas.width=size;canvas.height=size;const ctx=canvas.getContext('2d',{willReadFrequently:true});ctx.drawImage(img,0,0,size,size);const data=ctx.getImageData(0,0,size,size).data,scores=Object.fromEntries(available.map(c=>[c,0]));for(let i=0;i<data.length;i+=16){const r=data[i],g=data[i+1],b=data[i+2],mx=Math.max(r,g,b),mn=Math.min(r,g,b);if(r>238&&g>238&&b>238)continue;if(mx-mn<9&&mx>185)continue;let best='',dist=1e9;for(const c of available){const q=palette[c],d=(r-q[0])**2+(g-q[1])**2+(b-q[2])**2;if(d<dist){dist=d;best=c;}}if(best)scores[best]+=1/(1+dist/9000);}const ranked=Object.entries(scores).sort((a,b)=>b[1]-a[1]);if(ranked[0]?.[1]>0)result[src]=title(ranked[0][0]);}catch{}resolve();};img.onerror=()=>resolve();img.src=src;})));
+      return result;
+    }
+    if(p.category==='Bags'&&variantSelect&&uniqueChoices.length>1){
+      const sourceLabel=variantSelect.closest('label');if(sourceLabel)sourceLabel.classList.add('variant-source');
+      const selector=document.createElement('label');selector.className='auto-colour-selector';selector.innerHTML=`<span>Colour</span><select id="display-colour">${uniqueChoices.map((x,i)=>`<option value="${i}">${esc(x.colour)}</option>`).join('')}</select>`;sourceLabel?.before(selector);
+      const displaySelect=selector.querySelector('select');let detected={};
+      const photoFor=choice=>explicitMap[choice.colour]||Object.entries(detected).find(([,c])=>c.toLowerCase()===String(choice.colour).toLowerCase())?.[0]||photos[uniqueChoices.indexOf(choice)+1]||photos[uniqueChoices.indexOf(choice)]||photos[0];
+      const choose=index=>{const choice=uniqueChoices[Number(index)]||uniqueChoices[0];variantSelect.value=choice.variant.id;originalChange?.();showPhoto(photoFor(choice),choice.colour);selector.querySelector('span').textContent='Colour — '+choice.colour;};
+      displaySelect.onchange=()=>choose(displaySelect.value);
+      $$('[data-photo]').forEach(b=>b.onclick=()=>{showPhoto(b.dataset.photo,'');const match=Object.entries(detected).find(([src])=>src===b.dataset.photo)?.[1];if(match){const i=uniqueChoices.findIndex(x=>String(x.colour).toLowerCase()===match.toLowerCase());if(i>=0){displaySelect.value=String(i);choose(i);}}});
+      choose(0);
+      detectPhotoColours().then(map=>{detected=map;choose(displaySelect.value);});
+    }else{
+      $$('[data-photo]').forEach(b=>b.onclick=()=>showPhoto(b.dataset.photo,''));
+      if(variantSelect){variantSelect.onchange=()=>{originalChange?.();const variant=p.variants.find(v=>v.id===variantSelect.value);if(variant)showPhoto(p.colourPhotos?.[variant.colour]||photos[0],variant.colour);};variantSelect.onchange();}
     }
 
     $('#add-form').insertAdjacentHTML('afterend',`<div id="product-extras" class="product-actions"><button data-save="${esc(p.id)}" aria-pressed="${isSaved(p.id)}" aria-label="Save ${esc(p.name)}" class="secondary">${isSaved(p.id)?'♥':'♡'}</button><span>Save this piece for later</span><a href="/saved">View saved pieces ↗</a></div><div class="product-accordions">${p.material?`<details><summary>Material & details</summary><p>${esc(p.material)}</p></details>`:''}${p.care?`<details><summary>Care instructions</summary><p>${esc(p.care)}</p></details>`:''}<details><summary>Pickup & delivery</summary><p>${esc(shop.settings.pickupInstructions)}<br>${esc(shop.settings.pickupTime)}</p><a href="/help">View available delivery areas ↗</a></details>${p.category==='Bags'?'':'<details><summary>Choosing your size</summary><p>Choose an available colour and size above. If you are unsure about fit or measurements, request details before paying.</p><a href="/request">Ask about this item ↗</a></details>'}</div>`);
