@@ -1,0 +1,12 @@
+node_modules/
+.env
+data/*
+!data/.gitkeep
+.env.*
+!.env.example
+.vercel/
+*.zip
+*.sqlite*
+
+/oreva-merged/
+/oreva_postpayment/

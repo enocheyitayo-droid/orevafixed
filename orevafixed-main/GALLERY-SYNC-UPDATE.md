@@ -1,0 +1,1 @@
+Product gallery sync update: colour selection changes the matching photo; thumbnail clicks always keep the clicked photo visible and only sync the matching colour/variant without overriding the image.

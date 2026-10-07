@@ -1,0 +1,20 @@
+{
+  "name": "acu-student-store",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "start": "node --env-file-if-exists=.env server.mjs",
+    "test": "node --test test/*.test.mjs",
+    "owner": "node --env-file-if-exists=.env owner.mjs",
+    "seed": "node --env-file-if-exists=.env seed.mjs",
+    "backup": "node --env-file-if-exists=.env backup.mjs"
+  },
+  "dependencies": {
+    "sharp": "0.35.4",
+    "web-push": "3.6.7"
+  }
+}

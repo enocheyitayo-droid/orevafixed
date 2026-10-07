@@ -1,0 +1,32 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "routes": [
+    {
+      "src": "/api/order/([a-f0-9]{64})/(verify|pay)",
+      "dest": "/api/order?token=$1&action=$2"
+    },
+    {
+      "src": "/api/order/([a-f0-9]{64})",
+      "dest": "/api/order?token=$1"
+    },
+    {
+      "src": "/api/admin/upload",
+      "dest": "/api/admin-upload"
+    },
+    {
+      "src": "/api/admin/([^/]+)",
+      "dest": "/api/admin?action=$1"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/api/.*",
+      "dest": "/api/not-found"
+    },
+    {
+      "src": "/.*",
+      "dest": "/index.html"
+    }
+  ]
+}
