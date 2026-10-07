@@ -103,7 +103,17 @@ async function product(req, res) {
       stock: variant.stock,
     })),
   };
-  const id = await supabase('/rest/v1/rpc/bagz_save_product', { method: 'POST', accessToken, body: { item } });
+  const mapping = {};
+  if (data.colourPhotos && typeof data.colourPhotos === 'object' && !Array.isArray(data.colourPhotos)) {
+    for (const [colour, photo] of Object.entries(data.colourPhotos)) {
+      if (!photo) continue;
+      const path = mediaPath(photo);
+      if (colour.length > 80 || !item.photos.includes(path)) throw new ApiProblem('Choose a saved product photo for each colour.');
+      mapping[colour] = path;
+    }
+  }
+  const withPhotos = Object.keys(mapping).length || data.colourPhotos;
+  const id = await supabase('/rest/v1/rpc/' + (withPhotos ? 'oreva_save_product_photos' : 'bagz_save_product'), { method: 'POST', accessToken, body: withPhotos ? { item, mapping } : { item } });
   sendJson(res, 200, { id });
 }
 

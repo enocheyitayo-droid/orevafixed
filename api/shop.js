@@ -86,6 +86,10 @@ export default async function handler(req, res) {
         ? (product.variants || []).map(variant => ({ ...variant, size: '' }))
         : product.variants,
     }));
+    try {
+      const mapsResponse = await fetch(new URL('/rest/v1/oreva_colour_photos?select=product_id,mapping',origin), {headers:{apikey:anonKey,Authorization:`Bearer ${anonKey}`},signal:AbortSignal.timeout(4000)});
+      if(mapsResponse.ok){const maps=await mapsResponse.json();if(Array.isArray(maps))for(const product of data.products){const map=maps.find(row=>row.product_id===product.id)?.mapping||{};product.colourPhotos=Object.fromEntries(Object.entries(map).map(([colour,path])=>[colour,mediaUrl(path)]));}}
+    } catch {}
     // Optional content migration must not prevent catalogue browsing.
     try {
       const contentResponse=await fetch(new URL('/rest/v1/rpc/oreva_read_content',origin),{method:'POST',headers:{apikey:anonKey,Authorization:`Bearer ${anonKey}`,'Content-Type':'application/json'},body:'{}',signal:AbortSignal.timeout(4000)});

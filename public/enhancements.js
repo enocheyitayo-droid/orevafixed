@@ -20,7 +20,21 @@ export function enhanceStore(c){const {$,$$,shop,esc,cash,toast}=c;
   const p=shop.products.find(p=>location.pathname==='/product/'+encodeURIComponent(p.id));
   if(p&&$('.detail')&&!$('#product-extras')){
     const photos=p.photos?.length?p.photos:[p.photo].filter(Boolean);$('.detail>div:first-child').insertAdjacentHTML('beforeend',`<div class="gallery-thumbs">${photos.map((src,i)=>`<button data-photo="${esc(src)}" aria-label="View product photo ${i+1}" aria-pressed="${i===0}"><img src="${esc(src)}" alt="${esc(p.name)} view ${i+1}"></button>`).join('')}</div>`);
-    $$('[data-photo]').forEach(b=>b.onclick=()=>{$('.detail-photo').src=b.dataset.photo;$$('[data-photo]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));});
+    const showPhoto=(src,label)=>{const image=$('.detail-photo');if(!image)return;image.src=src;image.alt=p.name+(label?' - '+label:'');$$('[data-photo]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.photo===src)));};
+    $$('[data-photo]').forEach(b=>b.onclick=()=>showPhoto(b.dataset.photo,''));
+    const variantSelect=$('#variant');
+    if(photos.length>1){
+      const all=document.createElement('option');all.value='';all.textContent='View all colours';variantSelect.prepend(all);
+      const originalChange=variantSelect.onchange;
+      const updateColour=()=>{
+        const variant=p.variants.find(v=>v.id===variantSelect.value);
+        if(!variant){showPhoto(photos[0],'All colours');$('#add-button').disabled=true;$('#buy-button').disabled=true;$('#stock').textContent='Choose a colour and size to order.';return;}
+        originalChange?.();showPhoto(p.colourPhotos?.[variant.colour]||photos[0],variant.colour);
+      };
+      variantSelect.onchange=updateColour;variantSelect.value='';updateColour();
+      $('#add-form').addEventListener('submit',event=>{if(!variantSelect.value){event.preventDefault();event.stopImmediatePropagation();variantSelect.focus();}},true);
+    }
+
     $('#add-form').insertAdjacentHTML('afterend',`<div id="product-extras" class="product-actions"><button data-save="${esc(p.id)}" aria-pressed="${isSaved(p.id)}" aria-label="Save ${esc(p.name)}" class="secondary">${isSaved(p.id)?'♥':'♡'}</button><span>Save this piece for later</span><a href="/saved">View saved pieces ↗</a></div><div class="product-accordions">${p.material?`<details><summary>Material & details</summary><p>${esc(p.material)}</p></details>`:''}${p.care?`<details><summary>Care instructions</summary><p>${esc(p.care)}</p></details>`:''}<details><summary>Pickup & delivery</summary><p>${esc(shop.settings.pickupInstructions)}<br>${esc(shop.settings.pickupTime)}</p><a href="/help">View available delivery areas ↗</a></details>${p.category==='Bags'?'':'<details><summary>Choosing your size</summary><p>Choose an available colour and size above. If you are unsure about fit or measurements, request details before paying.</p><a href="/request">Ask about this item ↗</a></details>'}</div>`);
     const related=shop.products.filter(x=>x.id!==p.id&&x.category===p.category).slice(0,4);if(related.length)$('#main').insertAdjacentHTML('beforeend',`<section class="section"><p class="eyebrow">MORE TO DISCOVER</p><h2>You might also like</h2><div class="grid">${c.cards(related)}</div></section>`);
   }

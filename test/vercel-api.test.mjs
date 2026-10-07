@@ -38,7 +38,7 @@ test('Vercel catalogue endpoint reads the public Supabase RPC', async () => {
     assert.deepEqual(requests.map(request => request.url), [
       'https://project.supabase.co/rest/v1/rpc/bagz_catalogue',
       'https://project.supabase.co/rest/v1/rpc/bagz_storefront_gallery',
-      'https://project.supabase.co/rest/v1/rpc/oreva_read_content',
+      'https://project.supabase.co/rest/v1/oreva_colour_photos?select=product_id,mapping', 'https://project.supabase.co/rest/v1/rpc/oreva_read_content',
     ]);
     assert.equal(requests[0].options.headers.apikey, 'public-test-key');
     assert.deepEqual(JSON.parse(res.body), {
